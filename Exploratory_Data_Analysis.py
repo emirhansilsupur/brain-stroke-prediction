@@ -5,8 +5,13 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-eda_data=pd.read_csv("C:/Users/emirh/Downloads/full_data.csv")
-eda_data.columns = eda_data.columns.str.lower()
+
+def get_data():
+    eda_data=pd.read_csv("C:/Users/emirh/Downloads/full_data.csv")
+    eda_data.columns = eda_data.columns.str.lower()
+    return eda_data
+
+data = get_data()    
 
 #Binning Categorical Data
 age_bin = [[0.0,11.9,17.9,29.9,39.9,49.9,59.9,69.9,79.9,np.inf],["0s","10s","20s","30s","40s","50s","60s","70s","80s+"]]
@@ -18,23 +23,27 @@ def cat_binning(df,var,bin):
     df[var +"_bin"] = pd.cut(x=df[var],bins=bin[0],labels=bin[1])
     return
 
-cat_binning(eda_data,"age",age_bin)
-cat_binning(eda_data,"bmi",bmi_bin)
-cat_binning(eda_data,"avg_glucose_level",glucose_bin)    
+cat_binning(data,"age",age_bin)
+cat_binning(data,"bmi",bmi_bin)
+cat_binning(data,"avg_glucose_level",glucose_bin)   
 
 #Alluvial Diagram
-gender_dim = go.parcats.Dimension(values=eda_data.gender, label="Gender")
-smoke_dim = go.parcats.Dimension(values=eda_data.smoking_status,label="Smoking",categoryarray=["formerly smoked","smokes","never smoked","Unknown"])
-bmi_dim = go.parcats.Dimension(values=eda_data.bmi_bin,label="BMI",categoryarray=["Obese","Overweight","Healthy Weight","Underweight"]) 
-work_dim = go.parcats.Dimension(values=eda_data.work_type,label="Work Type")    
-res_dim = go.parcats.Dimension(values=eda_data.residence_type,label="Residence Type")
-age_dim = go.parcats.Dimension(values=eda_data.age_bin,label="Age",categoryorder="category descending")
-glc_dim = go.parcats.Dimension(values=eda_data.avg_glucose_level_bin,label="Glucose Level",categoryarray=["Diabetes","Prediabetes","Normal"])
-hyp_dim = go.parcats.Dimension(values=eda_data.hypertension,label="Hypertension",categoryarray=[0,1],ticktext=["no","yes"])
-heart_dim= go.parcats.Dimension(values=eda_data.heart_disease,label="Heart Disease",categoryarray=[0,1],ticktext=["no","yes"])
-str_dim = go.parcats.Dimension(values=eda_data.stroke,categoryarray=[0,1],label="Stroke",ticktext=["not stroke","stroke"])
-color = eda_data.stroke
-colorscale = [[0, "#6fe396"], [1, "#c2100a"]]
+def get_parcats():
+    gender_dim = go.parcats.Dimension(values=data.gender, label="Gender")
+    smoke_dim = go.parcats.Dimension(values=data.smoking_status,label="Smoking",categoryarray=["formerly smoked","smokes","never smoked","Unknown"])
+    bmi_dim = go.parcats.Dimension(values=data.bmi_bin,label="BMI",categoryarray=["Obese","Overweight","Healthy Weight","Underweight"]) 
+    work_dim = go.parcats.Dimension(values=data.work_type,label="Work Type")    
+    res_dim = go.parcats.Dimension(values=data.residence_type,label="Residence Type")
+    age_dim = go.parcats.Dimension(values=data.age_bin,label="Age",categoryorder="category descending")
+    glc_dim = go.parcats.Dimension(values=data.avg_glucose_level_bin,label="Glucose Level",categoryarray=["Diabetes","Prediabetes","Normal"])
+    hyp_dim = go.parcats.Dimension(values=data.hypertension,label="Hypertension",categoryarray=[0,1],ticktext=["no","yes"])
+    heart_dim= go.parcats.Dimension(values=data.heart_disease,label="Heart Disease",categoryarray=[0,1],ticktext=["no","yes"])
+    str_dim = go.parcats.Dimension(values=data.stroke,categoryarray=[0,1],label="Stroke",ticktext=["not stroke","stroke"])
+    color = data.stroke
+    colorscale = [[0, "#6fe396"], [1, "#c2100a"]]
+    return gender_dim,smoke_dim,bmi_dim,work_dim,res_dim,age_dim,glc_dim,hyp_dim,heart_dim,str_dim,color,colorscale
+
+gender_dim,smoke_dim,bmi_dim,work_dim,res_dim,age_dim,glc_dim,hyp_dim,heart_dim,str_dim,color,colorscale = get_parcats()    
 
 def alluvial_diagram(dimensions_list,title):
     if len(dimensions_list) >1:
@@ -51,11 +60,11 @@ def alluvial_diagram(dimensions_list,title):
     else:
         raise ValueError("dimension_list must contain at least 2 dimension. For example [age_dim,str_dim]")
     
-alluvial_diagram([smoke_dim,str_dim],"The Patient's Flow Between Smoking Status and Having a Stroke")
-alluvial_diagram([glc_dim,str_dim],"The Patient's Flow Between Glucose and Having a Stroke")
-alluvial_diagram([bmi_dim,str_dim],"The Patient's Flow Between BMI and Having a Stroke")
-alluvial_diagram([bmi_dim,glc_dim,str_dim],"Stroke Patient Flow")
-alluvial_diagram([age_dim,smoke_dim,bmi_dim,glc_dim,str_dim],"Stroke Patient Flow")
+# alluvial_diagram([smoke_dim,str_dim],"The Patient's Flow Between Smoking Status and Having a Stroke")
+# alluvial_diagram([glc_dim,str_dim],"The Patient's Flow Between Glucose and Having a Stroke")
+# alluvial_diagram([bmi_dim,str_dim],"The Patient's Flow Between BMI and Having a Stroke")
+# alluvial_diagram([bmi_dim,glc_dim,str_dim],"Stroke Patient Flow")
+# alluvial_diagram([age_dim,smoke_dim,bmi_dim,glc_dim,str_dim],"Stroke Patient Flow")
 
 #Bivariate Analysis
 def bivariate_plot(df,var1,var2,hue,title):
@@ -69,12 +78,12 @@ def bivariate_plot(df,var1,var2,hue,title):
     plt.legend(bbox_to_anchor=(1.02, 0.15),loc="best",borderaxespad=0)
     return plt.show()  
 
-bivariate_plot(eda_data,"bmi_bin","stroke","gender","Patients with Stroke by BMI")
-bivariate_plot(eda_data,"avg_glucose_level_bin","stroke","gender","Patients with Stroke by Glucose Level")
-bivariate_plot(eda_data,"smoking_status","stroke","gender","Patients with Stroke by Smoking Status")
-bivariate_plot(eda_data,"age_bin","stroke","gender","Patients with Stroke by Age")
-bivariate_plot(eda_data,"work_type","stroke","gender","Patients with Stroke by Work Type")
-bivariate_plot(eda_data,"age_bin","heart_disease","gender","Patients with Heart Disease by Age")
-bivariate_plot(eda_data,"age_bin","hypertension","gender","Patients with Hypertension by Age")
-bivariate_plot(eda_data,"residence_type","stroke","gender","Patients with Stroke by Residence Type")
-bivariate_plot(eda_data,"ever_married","stroke","gender","Patients with Stroke by Marriage Status")
+# bivariate_plot(eda_data,"bmi_bin","stroke","gender","Patients with Stroke by BMI")
+# bivariate_plot(eda_data,"avg_glucose_level_bin","stroke","gender","Patients with Stroke by Glucose Level")
+# bivariate_plot(eda_data,"smoking_status","stroke","gender","Patients with Stroke by Smoking Status")
+# bivariate_plot(eda_data,"age_bin","stroke","gender","Patients with Stroke by Age")
+# bivariate_plot(eda_data,"work_type","stroke","gender","Patients with Stroke by Work Type")
+# bivariate_plot(eda_data,"age_bin","heart_disease","gender","Patients with Heart Disease by Age")
+# bivariate_plot(eda_data,"age_bin","hypertension","gender","Patients with Hypertension by Age")
+# bivariate_plot(eda_data,"residence_type","stroke","gender","Patients with Stroke by Residence Type")
+# bivariate_plot(eda_data,"ever_married","stroke","gender","Patients with Stroke by Marriage Status")
