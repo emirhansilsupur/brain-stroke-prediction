@@ -22,21 +22,20 @@ sns.set(style="white", palette="muted", color_codes=True)
 pd.set_option("display.width", 1000)
 
 
-bs_df = pd.read_csv("C:/Users/emirh/Downloads/full_data.csv")
-
-#Get the columns
-bs_df.columns = bs_df.columns.str.lower()
-discrete_cols = [var for var in bs_df.columns if bs_df[var].dtypes!="O" and bs_df[var].nunique()<10]
-continuous_cols = [var for var in bs_df.columns if bs_df[var].dtypes!="O" and var!="stroke" and var not in discrete_cols ]
-cat_cols = [var for var in bs_df.columns if bs_df[var].dtypes=="O"]
-numerical_cols = [var for var in bs_df.columns if bs_df[var].dtypes != "O"]
-mixed_cols = discrete_cols + cat_cols
-
-
+#### Data Analysis ####
 class DataOperation:
     
-    def __init__(self,df):
-        self.df=df
+    def __init__(self):
+        self.df = pd.read_csv("C:/Users/emirh/Downloads/full_data.csv")
+
+    def get_columns(self):
+        self.df.columns = self.df.columns.str.lower()
+        discrete_cols = [var for var in self.df.columns if self.df[var].dtypes!="O" and self.df[var].nunique()<10]
+        continuous_cols = [var for var in self.df.columns if self.df[var].dtypes!="O" and var!="stroke" and var not in discrete_cols ]
+        cat_cols = [var for var in self.df.columns if self.df[var].dtypes=="O"]
+        numerical_cols = [var for var in self.df.columns if self.df[var].dtypes != "O"]
+        mixed_cols = discrete_cols + cat_cols
+        return discrete_cols,continuous_cols,cat_cols,numerical_cols,mixed_cols
         
     def data_preview(self):
 
@@ -49,7 +48,7 @@ class DataOperation:
         print(self.df.describe().T)
 
     def data_summary(self):
-        global discrete_cols,continuous_cols,cat_cols,mixed_cols
+        discrete_cols,continuous_cols,cat_cols,numerical_cols,mixed_cols = self.get_columns()
         
         cardinality = self.df[cat_cols].nunique()
 
@@ -79,7 +78,7 @@ class DataOperation:
             print("There is no missing value.")
 
     def numerical_viz(self):
-        global continuous_cols
+        discrete_cols,continuous_cols,cat_cols,numerical_cols,mixed_cols = self.get_columns()
 
         for col in self.df[continuous_cols]:
             
@@ -91,7 +90,7 @@ class DataOperation:
             plt.show() 
               
     def categorical_viz(self):
-        global mixed_cols
+        discrete_cols,continuous_cols,cat_cols,numerical_cols,mixed_cols = self.get_columns()
         c=1
         fig = plt.figure(figsize=(15,10))
         for col in self.df[mixed_cols]:
@@ -105,7 +104,7 @@ class DataOperation:
         plt.show()
 
     def skewness_kurtosis(self):
-        global continuous_cols
+        discrete_cols,continuous_cols,cat_cols,numerical_cols,mixed_cols = self.get_columns()
         skew={}
         kurt={}
         for col in self.df[continuous_cols]:
@@ -124,6 +123,7 @@ class DataOperation:
                 continuous_cols.remove(col)
                 continuous_cols += [col +"_boxcox"]
                 self.numerical_viz()
+
     def cat_encoder(self):
         
         self.df["gender"] = [1 if i == "Male" else 0 for i in self.df["gender"]]
@@ -163,16 +163,16 @@ class DataOperation:
             return X_train,X_test,y_train,y_test,X_cols
 
 
-bs_op = DataOperation(bs_df)
-bs_op.data_preview()
-bs_op.data_summary()
-bs_op.data_corr()
-bs_op.missing_values_analysis()
-bs_op.numerical_viz()
-bs_op.categorical_viz()
-bs_op.skewness_kurtosis()
-bs_op.cat_encoder()
-train_test=bs_op.get_train_test_data()
+# bs_op = DataOperation()
+# bs_op.data_preview()
+# bs_op.data_summary()
+# bs_op.data_corr()
+# bs_op.missing_values_analysis()
+# bs_op.numerical_viz()
+# bs_op.categorical_viz()
+# bs_op.skewness_kurtosis()
+# bs_op.cat_encoder()
+# train_test=bs_op.get_train_test_data()
 
 ############ MODEL BUILDING ############
 class modelBuilding():
@@ -263,7 +263,7 @@ class modelBuilding():
             raise ValueError(f"Invalid Model \nPlease enter only one of the following model names: \nXgboost \nLightGBM \nCatboost")
 
 
-bs_mb = modelBuilding()
-bs_mb.gb_models()
-bs_mb.fine_tuning()
-bs_mb.model_evaluation("LightGBM")
+# bs_mb = modelBuilding()
+# bs_mb.gb_models()
+# bs_mb.fine_tuning()
+# bs_mb.model_evaluation("LightGBM")
