@@ -107,7 +107,7 @@ if page =="Prediction":
         X = X[["gender","age","hypertension","heart_disease","ever_married","residence_type","bmi","avg_glucose_level","work_type_private","work_type_self_employed",
         "work_type_children","smoking_status_formerly_smoker","smoking_status_never_smoked","smoking_status_smokes"]]
     
-        #st.write.type(gender_)
+        
         prediction = model.predict(X)
 
         #Prediction Probability
@@ -127,5 +127,23 @@ if page =="Prediction":
         else:
             st.error(f"Probability of Occurance of Stroke is %{stroke_prob}")
        
-        
+if page=="Visualization": 
+    
+    axis  = st.selectbox("Which diagram would you like to view?",["Smoking Status and Having a Stroke","Glucose Level and Having a Stroke",
+    "BMI and Having a Stroke","Stroke Patient Flow"])
+
+    if axis=="Smoking Status and Having a Stroke":
+        alluvial_diagram([smoke_dim,str_dim],"The Patient's Flow Between Smoking Status and Having a Stroke")
+    elif axis=="Glucose Level and Having a Stroke":
+        alluvial_diagram([glc_dim,str_dim],"The Patient's Flow Between Glucose and Having a Stroke")
+    elif axis=="BMI and Having a Stroke":    
+        alluvial_diagram([bmi_dim,str_dim],"The Patient's Flow Between BMI and Having a Stroke")
+    else:
+        alluvial_diagram([bmi_dim,glc_dim,str_dim],"Stroke Patient Flow")
+
+       
+    b_x= st.selectbox("Select a x variable",["BMI","Glucose Level","Smoking Status","Age","Work Type","Heart Disease","Hypertension","Residence Type","Marriage Status"])
+    b_y = st.selectbox("Select a y variable",["Stroke","Heart Disease","Hypertension"])
+    b_hue = st.selectbox("Select a hue",["Gender","Marriage Status","Residence Type","Heart Disease","Hypertension"])
+    bivariate_plot(b_x,b_y,b_hue)
     
