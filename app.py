@@ -4,6 +4,7 @@ import streamlit as st
 import joblib
 import numpy as np
 import pandas as pd
+import time
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -143,6 +144,13 @@ if page == "Prediction":
         X.drop(columns="smoking_status", inplace=True)
 
     if button == True:
+        info=st.info("Please wait, prediction is in progress:hourglass:")
+        progress_bar=st.progress(0)
+        for perc_completed in range(100):
+            time.sleep(0.05)
+            progress_bar.progress(perc_completed+1)
+        info.empty()    
+                
         X = X[
             [
                 "gender",
@@ -167,21 +175,21 @@ if page == "Prediction":
         stroke_prob = pred_prob[0][1] * 100
 
         if prediction == 1:
-            st.error("You have Higher Chances of having a Stroke:disappointed:")
+            st.error("You have higher chances of having a stroke:disappointed:")
         else:
-            st.success("You have Lower Chances of having a Stroke😊")
+            st.success("You have lower chances of having a stroke🥳")
 
         if stroke_prob < 25:
             st.success(
-                f"Probability of occurance of Stroke is %{round(stroke_prob,2)}:smirk:"
+                f"Probability of occurance of stroke is %{round(stroke_prob,2)}:smirk:"
             )
         elif stroke_prob < 50:
             st.info(
-                f"Probability of occurance of Stroke is %{round(stroke_prob,2)}:hushed:"
+                f"Probability of occurance of stroke is %{round(stroke_prob,2)}:hushed:"
             )
         elif stroke_prob < 75:
             st.warning(
-                f"Probability of occurance of Stroke is %{round(stroke_prob,2)}:worried:"
+                f"Probability of occurance of stroke is %{round(stroke_prob,2)}:worried:"
             )
         else:
             st.error(
@@ -231,7 +239,10 @@ if page == "Visualization":
         st.error("Please select another 'hue' variable")
 
     else:
+        
+        st.write("-----" * 34)
         bivariate_plot(b_x, b_y, b_hue)
+        st.write("-----" * 34)
 
     ####
     col1, col2 = st.columns([1, 4])
@@ -285,8 +296,9 @@ if page == "Visualization":
             all_parcats.append(ever_married_)
 
     all_parcats.insert(len(all_parcats), str_dim)
-
+    st.write("-----" * 34)
     alluvial_diagram(all_parcats)
+    st.write("-----" * 34)
 
 
 if page == "About":
@@ -302,4 +314,4 @@ if page == "About":
         """**[Click For More Information About The Project](https://www.kaggle.com/datasets/zzettrkalpakbal/full-filled-brain-stroke-dataset)**"""
     )
 
-    st.caption("*This project was developed to learn the 'model deployment' phase.*")
+    st.caption("*This project was developed to learn the model deployment phase.*")
