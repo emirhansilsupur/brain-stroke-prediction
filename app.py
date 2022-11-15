@@ -44,10 +44,10 @@ if page == "Prediction":
 
     if st.checkbox("Dont Know BMI?"):
         height = st.slider(
-            "Enter User's Height in cm", value=100.0, step=1.0, format="%.2f"
+            "Enter User's Height in cm", value=200.0, step=1.0, format="%.2f"
         )
         weight = st.slider(
-            "Enter User's Weight in kgs", value=100.0, step=1.0, format="%.2f"
+            "Enter User's Weight in kgs", value=200.0, step=1.0, format="%.2f"
         )
         bmi_ = weight / (height / 100) ** 2
         st.write(f"BMI of user is {bmi_} and will be autoupdated")
