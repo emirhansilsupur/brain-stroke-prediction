@@ -314,4 +314,4 @@ if page == "About":
         """**[Click For More Information About The Project](https://www.kaggle.com/datasets/zzettrkalpakbal/full-filled-brain-stroke-dataset)**"""
     )
 
-    st.caption("*This project was developed to learn the model deployment phase.*")
+    st.caption("*This project was developed to learn the model deployment.*")
