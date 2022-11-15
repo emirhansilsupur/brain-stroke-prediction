@@ -144,13 +144,13 @@ if page == "Prediction":
         X.drop(columns="smoking_status", inplace=True)
 
     if button == True:
-        info=st.info("Please wait, prediction is in progress:hourglass:")
-        progress_bar=st.progress(0)
+        info = st.info("Please wait, prediction is in progress:hourglass:")
+        progress_bar = st.progress(0)
         for perc_completed in range(100):
             time.sleep(0.05)
-            progress_bar.progress(perc_completed+1)
-        info.empty()    
-                
+            progress_bar.progress(perc_completed + 1)
+        info.empty()
+
         X = X[
             [
                 "gender",
@@ -179,7 +179,12 @@ if page == "Prediction":
         else:
             st.success("You have lower chances of having a stroke🥳")
 
-        if stroke_prob < 25:
+        if stroke_prob < 1:
+            st.success(
+                f"Probability of occurance of stroke is %{round(stroke_prob,2)}:blush:"
+            )
+
+        elif stroke_prob < 25:
             st.success(
                 f"Probability of occurance of stroke is %{round(stroke_prob,2)}:smirk:"
             )
@@ -239,7 +244,7 @@ if page == "Visualization":
         st.error("Please select another 'hue' variable")
 
     else:
-        
+
         st.write("-----" * 34)
         bivariate_plot(b_x, b_y, b_hue)
         st.write("-----" * 34)
@@ -293,7 +298,7 @@ if page == "Visualization":
             all_parcats.append(res_dim)
         else:
 
-            all_parcats.append(ever_married_)
+            all_parcats.append(married_dim)
 
     all_parcats.insert(len(all_parcats), str_dim)
     st.write("-----" * 34)
