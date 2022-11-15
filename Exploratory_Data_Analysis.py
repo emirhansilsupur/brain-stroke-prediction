@@ -36,8 +36,7 @@ def cat_binning(df, var, bin):
 cat_binning(data, "age", age_bin)
 cat_binning(data, "bmi", bmi_bin)
 cat_binning(data, "avg_glucose_level", glucose_bin)
-# Index(['gender', 'age', 'hypertension', 'heart_disease', 'ever_married', 'work_type', 'residence_type', 'avg_glucose_level',
-#  'bmi', 'smoking_status', 'stroke', 'age_bin', 'bmi_bin', 'avg_glucose_level_bin'], dtype='object')
+
 data.rename(
     columns={
         "gender": "Gender",
@@ -92,6 +91,9 @@ def get_parcats():
         categoryarray=[0, 1],
         ticktext=["no", "yes"],
     )
+    
+    married_dim = go.parcats.Dimension(values=data["Marriage Status"],label="Marriage Status")
+    
     str_dim = go.parcats.Dimension(
         values=data.Stroke,
         categoryarray=[0, 1],
@@ -110,6 +112,7 @@ def get_parcats():
         glc_dim,
         hyp_dim,
         heart_dim,
+        married_dim,
         str_dim,
         color,
         colorscale,
@@ -126,6 +129,7 @@ def get_parcats():
     glc_dim,
     hyp_dim,
     heart_dim,
+    married_dim,
     str_dim,
     color,
     colorscale,
