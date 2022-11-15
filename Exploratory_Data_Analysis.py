@@ -156,12 +156,10 @@ def alluvial_diagram(dimensions_list):
 # Bivariate Analysis
 def bivariate_plot(var1, var2, hue):
     dg = data.groupby([var1, hue])[var2].sum().reset_index()
-    sns.set_style(
-        "whitegrid", {"font.family": "serif", "font.serif": "Times New Roman"}
-    )
+    sns.set_style("whitegrid", {"font.family": "serif", "font.serif": "Times New Roman"})
     ax = sns.barplot(x=var1, y=var2, hue=hue, data=dg, palette="Set1")
     sns.despine(bottom=True, left=True)
-    ax.set(ylabel="Total Stroke")
+    ax.set(ylabel=var2)
     ax.set(xlabel=var1)
     plt.legend(bbox_to_anchor=(1.02, 0.15), loc="best", borderaxespad=0)
     return st.pyplot(plt)
