@@ -8,7 +8,7 @@ import streamlit as st
 
 
 def get_data():
-    eda_data = pd.read_csv(r"C:/Users/emirh/Downloads/full_data.csv")
+    eda_data = pd.read_csv("full_data.csv")
     eda_data.columns = eda_data.columns.str.lower()
     return eda_data
 
