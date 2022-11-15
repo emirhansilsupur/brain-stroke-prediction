@@ -22,7 +22,7 @@ warnings.filterwarnings("ignore")
 sns.set(style="white", palette="muted", color_codes=True)
 pd.set_option("display.width", 1000)
 
-#bs_df = pd.read_csv("C:/Users/emirh/Downloads/full_data.csv")
+
 #### Data Analysis ####
 class DataOperation:
     def __init__(self, df):
